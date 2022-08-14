@@ -1,7 +1,7 @@
 import BaseEvent from '../../utils/structures/BaseEvent';
 import DiscordClient from '../../client/Client';
 import { runTimeouts } from '../../utils/setTimeout';
-import { Message, MessageReaction } from 'discord.js';
+import { ChannelType, Message, MessageReaction } from 'discord.js';
 
 export default class MessageReactionAddEvent extends BaseEvent {
     constructor() {
@@ -11,7 +11,7 @@ export default class MessageReactionAddEvent extends BaseEvent {
     async run(client: DiscordClient, reaction: MessageReaction) {
         console.log('inside');
         
-        if (!reaction || !reaction.message.guild || reaction.message.channel.type === 'DM') {
+        if (!reaction || !reaction.message.guild || reaction.message.channel.type === ChannelType.DM) {
             return;
         }
         

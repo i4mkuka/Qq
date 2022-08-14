@@ -156,7 +156,7 @@ export default class WarningCommand extends BaseCommand {
         await msg.reply({
             embeds: [
                 new MessageEmbed()
-                .setColor('GREEN')
+                .setColor('Green')
                 .setDescription(`${(await fetchEmoji('check'))?.toString()} Cleared ${warning} warnings for ${user.tag}`)
             ]
         });
@@ -205,7 +205,7 @@ export default class WarningCommand extends BaseCommand {
         await msg.reply({
             embeds: [
                 new MessageEmbed()
-                .setColor('GREEN')
+                .setColor('Green')
                 .setDescription(`${(await fetchEmoji('check'))?.toString()} Warning removed successfully!`)
             ]
         });

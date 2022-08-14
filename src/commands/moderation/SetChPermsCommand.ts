@@ -1,4 +1,4 @@
-import { CategoryChannel, CommandInteraction, Message, TextChannel, Permissions, PermissionFlags, PermissionString, GuildChannel, Role, AutocompleteInteraction, Interaction, Collection } from 'discord.js';
+import { CategoryChannel, CommandInteraction, Message, TextChannel, Permissions, PermissionFlags, PermissionsString, GuildChannel, Role, AutocompleteInteraction, Interaction, Collection, PermissionsBitField, ChannelType } from 'discord.js';
 import BaseCommand from '../../utils/structures/BaseCommand';
 import DiscordClient from '../../client/Client';
 import CommandOptions from '../../types/CommandOptions';
@@ -14,7 +14,7 @@ import AutoCompleteOptions from '../../types/AutoCompleteOptions';
 export default class SetChPermsCommand extends BaseCommand {
     supportsInteractions: boolean = true;
 
-    permissions = [Permissions.FLAGS.MANAGE_CHANNELS];
+    permissions = [PermissionsBitField.Flags.ManageChannels];
 
     constructor() {
         super('setchperms', 'moderation', []);
@@ -27,17 +27,18 @@ export default class SetChPermsCommand extends BaseCommand {
             console.log(focused);            
 
             if (focused.name === 'permission') {
-                const { FLAGS } = Permissions;
+                const { Flags } = PermissionsBitField;
+
                 const responseArray = [];
-                const perms: (keyof typeof FLAGS)[] = [
-                    'SEND_MESSAGES',
-                    'ATTACH_FILES',
-                    'EMBED_LINKS',
-                    'MANAGE_MESSAGES',
-                    'MENTION_EVERYONE',
-                    'USE_APPLICATION_COMMANDS',
-                    'USE_EXTERNAL_EMOJIS',
-                    'USE_EXTERNAL_STICKERS'
+                const perms: (keyof typeof Flags)[] = [
+                    'SendMessages',
+                    'AttachFiles',
+                    'EmbedLinks',
+                    'ManageMessages',
+                    'MentionEveryone',
+                    'UseApplicationCommands',
+                    'UseExternalEmojis',
+                    'UseExternalStickers'
                 ];
 
                 for await (const key of perms) {
@@ -75,23 +76,23 @@ export default class SetChPermsCommand extends BaseCommand {
             msg = await msg.reply({
                 embeds: [
                     new MessageEmbed()
-                    .setColor('GOLD')
+                    .setColor('Gold')
                     .setDescription((await fetchEmoji('loading'))?.toString() + ' Working...')
                 ]
             });
         }
 
-        const { FLAGS } = Permissions;
+        const { Flags } = PermissionsBitField;
         
         let channels: (TextChannel | CategoryChannel)[] = [];
-        let permKey: PermissionString;
+        let permKey: PermissionsString;
         let permValue: null | boolean = null;
         let role: Role;
 
         if (options.isInteraction) {
             channels.push(<TextChannel | CategoryChannel> options.options.getChannel('channel'));
 
-            if (channels[0].type !== 'GUILD_CATEGORY' && channels[0].type !== 'GUILD_TEXT') {
+            if (channels[0].type !== ChannelType.GuildCategory && channels[0].type !== ChannelType.GuildText) {
                 await this.deferReply(msg, {
                     content: (await fetchEmoji('error'))?.toString() + ' The channel with ID ' + (channels[0] as GuildChannel).id + ' is not a text channel or category.',
                     embeds: []
@@ -99,17 +100,17 @@ export default class SetChPermsCommand extends BaseCommand {
 
                 return;
             }
-            else if (channels[0].type === 'GUILD_CATEGORY') {
+            else if (channels[0].type === ChannelType.GuildCategory) {
                 const ch = channels[0];
                 channels = [];
 
-                const matching = <Collection<string, TextChannel>> await msg.guild!.channels.cache.filter(c => c.parent?.id === ch.id && c.type === 'GUILD_TEXT');
+                const matching = <Collection<string, TextChannel>> await msg.guild!.channels.cache.filter(c => c.parent?.id === ch.id && c.type === ChannelType.GuildText);
                 channels = matching.toJSON();
             }
 
-            permKey = <PermissionString> options.options.getString('permission');
+            permKey = <PermissionsString> options.options.getString('permission');
             
-            if (FLAGS[permKey] === undefined) {
+            if (Flags[permKey] === undefined) {
                 await this.deferReply(msg, {
                     content: (await fetchEmoji('error'))?.toString() + ' Invalid permission key given.',
                     embeds: []
@@ -147,9 +148,9 @@ export default class SetChPermsCommand extends BaseCommand {
                 return;
             }
 
-            permKey = <PermissionString> options.args.pop();
+            permKey = <PermissionsString> options.args.pop();
 
-            if (FLAGS[permKey] === undefined) {
+            if (Flags[permKey] === undefined) {
                 await this.deferReply(msg, {
                     content: (await fetchEmoji('error'))?.toString() + ' Invalid permission key given.',
                     embeds: []
@@ -189,7 +190,7 @@ export default class SetChPermsCommand extends BaseCommand {
                     try {
                         channel = <typeof channel> (await msg.guild!.channels.fetch(chID))!;
 
-                        if (channel.type !== 'GUILD_CATEGORY' && channel.type !== 'GUILD_TEXT') {
+                        if (channel.type !== ChannelType.GuildCategory && channel.type !== ChannelType.GuildText) {
                             await this.deferReply(msg, {
                                 content: (await fetchEmoji('error'))?.toString() + ' The channel with ID ' + chID + ' is not a text channel or category.',
                                 embeds: []
@@ -198,8 +199,8 @@ export default class SetChPermsCommand extends BaseCommand {
                             return;
                         }
 
-                        if (channel.type === 'GUILD_CATEGORY') {
-                            channels = [...channel.children.filter(c => c.type === 'GUILD_TEXT').toJSON() as TextChannel[], ...channels];
+                        if (channel.type === ChannelType.GuildCategory) {
+                            channels = [...channel.children.cache.filter(c => c.type === ChannelType.GuildText).toJSON() as TextChannel[], ...channels];
                             continue;
                         }
                     }
@@ -219,7 +220,7 @@ export default class SetChPermsCommand extends BaseCommand {
             }
         }
 
-        if (FLAGS[permKey] === undefined) {
+        if (Flags[permKey] === undefined) {
             await this.deferReply(msg, {
                 content: (await fetchEmoji('error'))?.toString() + ' Invalid permission key given.',
                 embeds: []
@@ -253,7 +254,7 @@ export default class SetChPermsCommand extends BaseCommand {
         await this.deferReply(msg, {
             embeds: [
                 new MessageEmbed()
-                .setColor('GREEN')
+                .setColor('Green')
                 .setDescription(`${(await fetchEmoji('check'))?.toString()} Permissions updated!\nThese channels were affected:\n\n${affected}`)
             ]
         }, true);

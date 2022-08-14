@@ -1,4 +1,4 @@
-import { CommandInteraction, Message } from 'discord.js';
+import { ChannelType, CommandInteraction, Message } from 'discord.js';
 import BaseCommand from '../../utils/structures/BaseCommand';
 import DiscordClient from '../../client/Client';
 import CommandOptions from '../../types/CommandOptions';
@@ -51,7 +51,7 @@ export default class StatsCommand extends BaseCommand {
                     }
                 ])
                 .addField('Roles', msg.guild!.roles.cache.size + '')
-                .addField('Text Channels', msg.guild!.channels.cache.filter(c => c.type === 'GUILD_TEXT').size + '')
+                .addField('Text Channels', msg.guild!.channels.cache.filter(c => c.type === ChannelType.GuildText).size + '')
                 .addField('Emojis', msg.guild!.emojis.cache.size + '')
                 .addField('Stickers', msg.guild!.stickers?.cache.size + '')
             ]

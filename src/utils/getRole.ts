@@ -16,7 +16,7 @@ export default async function getRole(msgInteraction: Message, options: CommandO
 export async function getRoleRaw(roleString: string, guild: Guild): Promise<Role | null | undefined> {
     if (roleString === '@everyone')
         return guild.roles.everyone;
-    else if (MessageMentions.ROLES_PATTERN.test(roleString)) {
+    else if (MessageMentions.RolesPattern.test(roleString)) {
         roleString = roleString.substring(3, roleString.length - 1);
     }
     

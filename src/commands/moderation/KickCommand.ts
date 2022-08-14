@@ -1,4 +1,4 @@
-import { BanOptions, CommandInteraction, ContextMenuInteraction, GuildMember, Interaction, Message, Permissions, User } from 'discord.js';
+import { BanOptions, CommandInteraction, ContextMenuCommandInteraction as ContextMenuInteraction, GuildMember, Interaction, Message, Permissions, PermissionsBitField, User } from 'discord.js';
 import BaseCommand from '../../utils/structures/BaseCommand';
 import DiscordClient from '../../client/Client';
 import CommandOptions from '../../types/CommandOptions';
@@ -15,7 +15,7 @@ export default class KickCommand extends BaseCommand {
     supportsInteractions: boolean = true;
     supportsContextMenu: boolean = true;
     
-    permissions = [Permissions.FLAGS.KICK_MEMBERS];
+    permissions = [PermissionsBitField.Flags.KickMembers];
 
     constructor() {
         super('kick', 'moderation', ['Kick']);

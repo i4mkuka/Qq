@@ -1,4 +1,4 @@
-import { BanOptions, CommandInteraction, EmojiIdentifierResolvable, GuildMember, Interaction, Message, TextChannel, User } from 'discord.js';
+import { BanOptions, CommandInteraction, EmojiIdentifierResolvable, GuildMember, Interaction, Message, ModalMessageModalSubmitInteraction, TextChannel, User } from 'discord.js';
 import BaseCommand from '../../utils/structures/BaseCommand';
 import DiscordClient from '../../client/Client';
 import CommandOptions from '../../types/CommandOptions';
@@ -11,6 +11,7 @@ import { fetchEmoji } from '../../utils/Emoji';
 import { Modal, ModalSubmitInteraction, showModal, TextInputComponent } from 'discord-modals';
 import PunishmentAppeal from '../../models/PunishmentAppeal';
 
+// FIXME: modal submit
 export default class AppealCommand extends BaseCommand {
     supportsInteractions: boolean = true;
     supportsLegacy = false;
@@ -19,22 +20,22 @@ export default class AppealCommand extends BaseCommand {
         super('appeal', 'moderation', []);
     }
 
-    async modalSubmit(client: DiscordClient, interaction: ModalSubmitInteraction) {
-        if (interaction.customId === 'appeal-modal') {
-            const content = interaction.getTextInputValue('appeal-content');
+    // async modalSubmit(client: DiscordClient, interaction: ModalMessageModalSubmitInteraction) {
+    //     if (interaction.customId === 'appeal-modal') {
+    //         const content = interaction.getTextInputValue('appeal-content');
 
-            await PunishmentAppeal.create({
-                user_id: interaction.member.id,
-                guild_id: interaction.guild!.id,
-                content
-            });
+    //         await PunishmentAppeal.create({
+    //             user_id: interaction.member.id,
+    //             guild_id: interaction.guild!.id,
+    //             content
+    //         });
 
-            await interaction.reply({
-                content: 'Your message was submitted successfully!',
-                ephemeral: true
-            });
-        }
-    }
+    //         await interaction.reply({
+    //             content: 'Your message was submitted successfully!',
+    //             ephemeral: true
+    //         });
+    //     }
+    // }
 
     async run(client: DiscordClient, interaction: CommandInteraction, options: InteractionOptions) {
         const existingData = await PunishmentAppeal.findOne({
@@ -57,10 +58,10 @@ export default class AppealCommand extends BaseCommand {
                         .setRequired(true),
                 );
 
-            await showModal(modal, {
-                client,
-                interaction,
-            });
+            // await showModal(modal, {
+            //     client,
+            //     interaction,
+            // });
         }
         else {
             await interaction.reply({

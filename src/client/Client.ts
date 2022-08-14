@@ -1,4 +1,4 @@
-import { Client, ClientOptions, Collection, Interaction, Message } from 'discord.js';
+import { BaseInteraction, Client, ClientOptions, Collection, Interaction, Message } from 'discord.js';
 import BaseEvent from '../utils/structures/BaseEvent';
 import BaseCommand from '../utils/structures/BaseCommand';
 import { Config } from './Config';
@@ -29,7 +29,7 @@ export default class DiscordClient extends Client {
     private _events = new Collection<string, BaseEvent>();
 
     rootdir: string;
-    msg: Message | Interaction | null = null;
+    msg: Message | BaseInteraction | null = null;
 
     config: Config;
     db: Database;
@@ -56,7 +56,7 @@ export default class DiscordClient extends Client {
         super({
             ws: {
                 properties: {
-                    $browser: "Discord iOS"
+                    browser: "Discord iOS"
                 }
             },
             ...options
@@ -102,7 +102,7 @@ export default class DiscordClient extends Client {
         return this._events; 
     }
 
-    setMessage(msg: Message | Interaction) {
+    setMessage(msg: Message | BaseInteraction) {
         this.msg = msg;
     }
 }

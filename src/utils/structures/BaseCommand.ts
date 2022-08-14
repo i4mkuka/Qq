@@ -1,5 +1,5 @@
 import { ModalSubmitInteraction } from 'discord-modals';
-import { PermissionResolvable, AutocompleteInteraction, CommandInteraction, CommandInteractionOption, ContextMenuInteraction, Interaction, Message, MessageEditOptions, MessageOptions, MessagePayload, WebhookEditMessageOptions, SelectMenuInteraction, ButtonInteraction, GuildMember } from 'discord.js';
+import { PermissionResolvable, AutocompleteInteraction, CommandInteraction, CommandInteractionOption, ContextMenuCommandInteraction, Interaction, Message, MessageEditOptions, MessageOptions, MessagePayload, WebhookEditMessageOptions, SelectMenuInteraction, ButtonInteraction, GuildMember, BaseInteraction, ModalMessageModalSubmitInteraction } from 'discord.js';
 import DiscordClient from '../../client/Client';
 import AutoCompleteOptions from '../../types/AutoCompleteOptions';
 import CommandOptions from '../../types/CommandOptions';
@@ -33,15 +33,15 @@ export default abstract class BaseCommand {
 
     }
 
-    async default(client: DiscordClient, interaction: Interaction): Promise <void> {
+    async default(client: DiscordClient, interaction: BaseInteraction): Promise <void> {
         
     }
 
-    async modalSubmit(client: DiscordClient, interaction: ModalSubmitInteraction): Promise <void> {
+    async modalSubmit(client: DiscordClient, interaction: ModalMessageModalSubmitInteraction): Promise <void> {
         
     }
 
-    async deferReply(msg: Message | CommandInteraction | ContextMenuInteraction, options: MessageOptions | string | MessagePayload | WebhookEditMessageOptions, edit: boolean = false): Promise<Message | CommandInteraction> {
+    async deferReply(msg: Message | CommandInteraction | ContextMenuCommandInteraction, options: MessageOptions | string | MessagePayload | WebhookEditMessageOptions, edit: boolean = false): Promise<Message | CommandInteraction> {
         if (msg instanceof Message) {
             return await msg[edit ? 'edit' : 'reply'](options as (MessageOptions & MessageEditOptions));
         }
@@ -49,7 +49,7 @@ export default abstract class BaseCommand {
         return (await msg.editReply(options as string | MessagePayload | WebhookEditMessageOptions)) as Message;
     }
 
-    async perms(client: DiscordClient, message: Message | Interaction) {
+    async perms(client: DiscordClient, message: Message | BaseInteraction) {
         let member: GuildMember | null = null;
 
         if (message.member && !(message.member instanceof GuildMember)) {
@@ -67,7 +67,7 @@ export default abstract class BaseCommand {
 
         for await (let permission of this.permissions) {
             if (!member?.permissions.has(permission, true)) {                
-                if (message instanceof Interaction && !message.isRepliable())
+                if (!(message instanceof Message) && !message.isRepliable())
                     return; 
     
                 await message.reply({
@@ -86,7 +86,7 @@ export default abstract class BaseCommand {
         return true;
     }
 
-    async execute(client: DiscordClient, message: Message | Interaction, options: CommandOptions | InteractionOptions) {
+    async execute(client: DiscordClient, message: Message | BaseInteraction, options: CommandOptions | InteractionOptions) {
         if (!(await this.perms(client, message))) {
             return;
         } 
@@ -94,5 +94,5 @@ export default abstract class BaseCommand {
         await this.run(client, message, options);
     }
 
-    abstract run(client: DiscordClient, message: Message | Interaction, options: CommandOptions | InteractionOptions): Promise<void>;
+    abstract run(client: DiscordClient, message: Message | BaseInteraction, options: CommandOptions | InteractionOptions): Promise<void>;
 }

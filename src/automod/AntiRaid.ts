@@ -1,4 +1,4 @@
-import { Collection, Guild, GuildMember, TextChannel } from 'discord.js';
+import { ChannelType, Collection, Guild, GuildMember, TextChannel } from 'discord.js';
 import DiscordClient from '../client/Client';
 import { lockAll } from '../commands/moderation/LockallCommand';
 
@@ -53,7 +53,7 @@ export default class AntiRaid {
                 cond = this.channels.indexOf(channel.id) !== -1 || this.channels.indexOf(channel.parent?.id!) !== -1;
             }
 
-            return cond && channel.type === 'GUILD_TEXT';
+            return cond && channel.type === ChannelType.GuildText;
         });
 
         await lockAll(this.client, role, channels, true);

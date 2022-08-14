@@ -1,5 +1,5 @@
 import BaseEvent from '../../utils/structures/BaseEvent';
-import { FileOptions, Message } from 'discord.js';
+import { ChannelType, Message } from 'discord.js';
 import DiscordClient from '../../client/Client';
 import CommandOptions from '../../types/CommandOptions';
 import path from 'path';
@@ -11,7 +11,7 @@ export default class MessageUpdateEvent extends BaseEvent {
     }
 
     async run(client: DiscordClient, oldMessage: Message, newMessage: Message) {
-        if (oldMessage.author.bot || !oldMessage.guild || oldMessage.channel.type === 'DM' || oldMessage.content === newMessage.content)
+        if (oldMessage.author.bot || !oldMessage.guild || oldMessage.channel.type ===  ChannelType.DM || oldMessage.content === newMessage.content)
             return;
 
         let msg = await client.msg;

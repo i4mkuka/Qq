@@ -1,4 +1,4 @@
-import { CommandInteraction, GuildMember, Interaction, Message, MessageAttachment } from 'discord.js';
+import { CommandInteraction, GuildMember, Interaction, Message, Attachment } from 'discord.js';
 import BaseCommand from '../../utils/structures/BaseCommand';
 import DiscordClient from '../../client/Client';
 import CommandOptions from '../../types/CommandOptions';
@@ -28,7 +28,7 @@ export default class AddsnippetCommand extends BaseCommand {
 
         let name: string;
         let content: string;
-        let files: MessageAttachment[] = [];
+        let files: Attachment[] = [];
         let filenames: string[] = [];
 
         if (options.isInteraction) {
@@ -49,7 +49,7 @@ export default class AddsnippetCommand extends BaseCommand {
                     return {
                         name: a.name,
                         url: a.proxyURL
-                    } as MessageAttachment;
+                    } as Attachment;
                 });
             }
         }

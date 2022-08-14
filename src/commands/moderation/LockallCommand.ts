@@ -1,4 +1,4 @@
-import { Collection, CommandInteraction, GuildBasedChannel, GuildChannel, Message, Permissions, Role, TextChannel } from 'discord.js';
+import { ChannelType, Collection, CommandInteraction, GuildBasedChannel, GuildChannel, Message, Permissions, PermissionsBitField, Role, TextChannel } from 'discord.js';
 import BaseCommand from '../../utils/structures/BaseCommand';
 import CommandOptions from '../../types/CommandOptions';
 import InteractionOptions from '../../types/InteractionOptions';
@@ -23,8 +23,8 @@ export async function lockAll(client: DiscordClient, role: Role, channels: Colle
                 let dbPerms;
 
                 let overWrites = await channel.permissionOverwrites.cache.get(role.id);
-                let allowperms = await overWrites?.allow?.has(Permissions.FLAGS.SEND_MESSAGES);
-                let denyperms = await overWrites?.deny?.has(Permissions.FLAGS.SEND_MESSAGES);
+                let allowperms = await overWrites?.allow?.has(PermissionsBitField.Flags.SendMessages);
+                let denyperms = await overWrites?.deny?.has(PermissionsBitField.Flags.SendMessages);
 
                 if (allowperms && !denyperms) {
                     await (dbPerms = 'ALLOW');
@@ -45,7 +45,7 @@ export async function lockAll(client: DiscordClient, role: Role, channels: Colle
                     
                     try {
                         await channel.permissionOverwrites.edit(role, {
-                            SEND_MESSAGES: false,
+                            SendMessages: false,
                         });
                     }
                     catch (e) {
@@ -134,11 +134,11 @@ export default class LockallCommand extends BaseCommand {
             (raid && (
 				(client.config.props[msg.guild!.id].raid.exclude && (client.config.props[msg.guild!.id].raid.channels.indexOf(c.id) === -1 && client.config.props[msg.guild!.id].raid.channels.indexOf(c.parent?.id) === -1)) || 
 				(!client.config.props[msg.guild!.id].raid.exclude && (client.config.props[msg.guild!.id].raid.channels.indexOf(c.id) !== -1 || client.config.props[msg.guild!.id].raid.channels.indexOf(c.parent?.id) !== -1))
-			))) && c.type === 'GUILD_TEXT'
+			))) && c.type === ChannelType.GuildText
         ) : null;
 
         if (channels === null && !raid) {
-            channels = msg.guild!.channels.cache.filter(c2 => (lockall.includes(c2.id) || lockall.includes(c2.parent?.id!)) && c2.type === 'GUILD_TEXT')!;
+            channels = msg.guild!.channels.cache.filter(c2 => (lockall.includes(c2.id) || lockall.includes(c2.parent?.id!)) && c2.type === ChannelType.GuildText)!;
             channels = channels.merge(lockallChannels, c => ({ keep: true, value: c }), c => ({ keep: true, value: c }), (c1, c2) => ({ keep: true, value: c2 }));
         }
 

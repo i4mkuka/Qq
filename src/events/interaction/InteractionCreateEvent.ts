@@ -1,17 +1,18 @@
 import BaseEvent from '../../utils/structures/BaseEvent';
-import { GuildMember, Interaction, Message, MessageEmbed } from 'discord.js';
+import { BaseInteraction, ChannelType, GuildMember, Interaction, Message } from 'discord.js';
 import DiscordClient from '../../client/Client';
 import CommandOptions from '../../types/CommandOptions';
 import InteractionOptions from '../../types/InteractionOptions';
 import AutoCompleteOptions from '../../types/AutoCompleteOptions';
+import MessageEmbed from '../../client/MessageEmbed';
 
 export default class InteractionCreateEvent extends BaseEvent {
     constructor() {
         super('interactionCreate');
     }
 
-    async run(client: DiscordClient, interaction: Interaction) {
-        if (!interaction.guild || !interaction.channel || interaction.channel.type === 'DM') {
+    async run(client: DiscordClient, interaction: BaseInteraction) {
+        if (!interaction.guild || !interaction.channel || interaction.channel.type === ChannelType.DM) {
             if (interaction.isRepliable())
                 await interaction.reply({
                     content: 'You cannot use this bot on DMs.',
@@ -21,14 +22,14 @@ export default class InteractionCreateEvent extends BaseEvent {
             return;
         }
 
-        if (interaction.isCommand() || interaction.isContextMenu()) {
+        if (interaction.isChatInputCommand() || interaction.isContextMenuCommand()) {
             await client.setMessage(interaction);
 
             const { commandName } = interaction;
 
             const command = await client.commands.get(commandName);
 
-            if (command && ((interaction.isCommand() && command.supportsInteractions) || (interaction.isContextMenu() && command.supportsContextMenu))) {
+            if (command && ((interaction.isChatInputCommand() && command.supportsInteractions) || (interaction.isContextMenuCommand() && command.supportsContextMenu))) {
                 const allowed = await client.auth.verify(interaction.member! as GuildMember, command);
 
                 if (!allowed) {

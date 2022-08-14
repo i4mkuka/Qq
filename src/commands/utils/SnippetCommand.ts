@@ -1,4 +1,4 @@
-import { CommandInteraction, FileOptions, GuildMember, Interaction, Message, MessageAttachment } from 'discord.js';
+import { CommandInteraction, GuildMember, Interaction, Message } from 'discord.js';
 import BaseCommand from '../../utils/structures/BaseCommand';
 import DiscordClient from '../../client/Client';
 import CommandOptions from '../../types/CommandOptions';
@@ -35,7 +35,7 @@ export default class AddsnippetCommand extends BaseCommand {
                     return {
                         name,
                         attachment: path.resolve(__dirname, '../../../storage', name)
-                    } as FileOptions
+                    }
                 }),
             });
         }

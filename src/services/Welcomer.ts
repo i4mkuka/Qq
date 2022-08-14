@@ -1,7 +1,8 @@
-import { GuildMember, MessageEmbed, TextChannel } from "discord.js";
+import { GuildMember, TextChannel } from "discord.js";
 import DiscordClient from "../client/Client";
 import fs from 'fs';
 import path from "path";
+import MessageEmbed from "../client/MessageEmbed";
 
 export default class Welcomer {
     messages: string[] = JSON.parse(fs.readFileSync(path.resolve(__dirname, '..', '..', 'resources', 'welcome_messages.json')).toString());

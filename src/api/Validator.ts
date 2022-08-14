@@ -1,11 +1,11 @@
-import { Guild, GuildChannel, GuildMember, Role, TextChannel, User } from "discord.js";
+import { ChannelType, Guild, GuildChannel, GuildMember, Role, TextChannel, User } from "discord.js";
 import DiscordClient from "../client/Client";
 
 export async function isChannel(id: string | number, guild: string): Promise <boolean> {
     try {
         const channel = <GuildChannel> await (<Guild> await DiscordClient.client.guilds.fetch(guild)).channels.fetch(id.toString());
 
-        if (!channel || (channel.type !== 'GUILD_TEXT' && channel.type !== 'GUILD_NEWS' && channel.type !== 'GUILD_CATEGORY'))
+        if (!channel || (channel.type !== ChannelType.GuildText && channel.type !== ChannelType.GuildNews && channel.type !== ChannelType.GuildCategory))
             return false;
     }
     catch (e) {

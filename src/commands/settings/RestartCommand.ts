@@ -1,10 +1,9 @@
-import { CommandInteraction, GuildMember, Interaction, InteractionCollector, Message, MessageActionRow, MessageButton, MessageCollector } from 'discord.js';
+import { ButtonStyle, CommandInteraction, GuildMember, Interaction, InteractionCollector, Message, MessageActionRowComponent, ButtonBuilder, MessageCollector, ActionRowBuilder, ComponentType, InteractionType } from 'discord.js';
 import BaseCommand from '../../utils/structures/BaseCommand';
 import DiscordClient from '../../client/Client';
 import CommandOptions from '../../types/CommandOptions';
 import InteractionOptions from '../../types/InteractionOptions';
 import MessageEmbed from '../../client/MessageEmbed';
-import { MessageButtonStyles } from 'discord.js/typings/enums';
 import { fetchEmoji } from '../../utils/Emoji';
 
 export default class RestartCommand extends BaseCommand {
@@ -17,31 +16,31 @@ export default class RestartCommand extends BaseCommand {
     }
 
     async run(client: DiscordClient, interaction: CommandInteraction, options: InteractionOptions) {
-        const row = new MessageActionRow();
+        const row = new ActionRowBuilder<ButtonBuilder>();
 
         row.addComponents([
-            new MessageButton()
+            new ButtonBuilder()
             .setCustomId('restart:true')
             .setLabel('Yes')
-            .setStyle(MessageButtonStyles.SUCCESS),
-            new MessageButton()
+            .setStyle(ButtonStyle.Success),
+            new ButtonBuilder()
             .setCustomId('restart:false')
             .setLabel('No')
-            .setStyle(MessageButtonStyles.DANGER)
+            .setStyle(ButtonStyle.Danger)
         ]);
 
-        const disabledRow = new MessageActionRow();
+        const disabledRow = new ActionRowBuilder<ButtonBuilder>();
 
         await disabledRow.addComponents([
-            new MessageButton()
+            new ButtonBuilder()
             .setCustomId('restart:true')
             .setLabel('Restart')
-            .setStyle(MessageButtonStyles.SUCCESS)
+            .setStyle(ButtonStyle.Success)
             .setDisabled(true),
-            new MessageButton()
+            new ButtonBuilder()
             .setCustomId('restart:false')
             .setLabel('Cancel')
-            .setStyle(MessageButtonStyles.DANGER)
+            .setStyle(ButtonStyle.Danger)
             .setDisabled(true)
         ]);
 
@@ -59,8 +58,8 @@ export default class RestartCommand extends BaseCommand {
         const collector = new InteractionCollector(client, {
             channel: reply.channel,
             message: reply,
-            componentType: 'BUTTON',
-            interactionType: 'MESSAGE_COMPONENT',
+            componentType: ComponentType.Button,
+            interactionType: InteractionType.MessageComponent,
             filter(i) {
                 return i.isButton() && i.customId.startsWith('restart');
             },
@@ -104,7 +103,7 @@ export default class RestartCommand extends BaseCommand {
                 await i.update({
                     embeds: [
                         new MessageEmbed()
-                        .setColor('GREY')
+                        .setColor('Grey')
                         .setTitle('System Restart')
                         .setDescription('This action has been canceled.')
                     ],
@@ -118,7 +117,7 @@ export default class RestartCommand extends BaseCommand {
                 await reply.edit({
                     embeds: [
                         new MessageEmbed()
-                        .setColor('GREY')
+                        .setColor('Grey')
                         .setTitle('System Restart')
                         .setDescription('This action has been canceled due to inactivity.')
                     ],

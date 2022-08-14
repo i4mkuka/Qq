@@ -1,4 +1,4 @@
-import { BanOptions, CommandInteraction, GuildMember, Interaction, Message, User, Permissions } from 'discord.js';
+import { BanOptions, CommandInteraction, GuildMember, Interaction, Message, User, Permissions, PermissionsBitField } from 'discord.js';
 import BaseCommand from '../../utils/structures/BaseCommand';
 import DiscordClient from '../../client/Client';
 import CommandOptions from '../../types/CommandOptions';
@@ -14,7 +14,7 @@ import { hasPermission, shouldNotModerate } from '../../utils/util';
 export default class MassBanCommand extends BaseCommand {
     supportsInteractions: boolean = true;
     
-    permissions = [Permissions.FLAGS.BAN_MEMBERS];
+    permissions = [PermissionsBitField.Flags.BanMembers];
 
     constructor() {
         super('massban', 'moderation', []);
@@ -47,7 +47,7 @@ export default class MassBanCommand extends BaseCommand {
                 banOptions.reason = <string> options.options.getString('reason');
 
             if (options.options.getInteger('days'))
-                banOptions.days = <number> options.options.getInteger('days');
+                banOptions.deleteMessageDays = <number> options.options.getInteger('days');
         }
         else {
             let i = 0;

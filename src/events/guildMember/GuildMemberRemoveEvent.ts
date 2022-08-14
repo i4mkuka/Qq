@@ -1,6 +1,6 @@
 import BaseEvent from '../../utils/structures/BaseEvent';
 import DiscordClient from '../../client/Client';
-import { GuildMember } from 'discord.js';
+import { AuditLogEvent, GuildMember } from 'discord.js';
 import UnverifiedMember from '../../models/UnverifiedMember';
 import Punishment from '../../models/Punishment';
 import PunishmentType from '../../types/PunishmentType';
@@ -22,7 +22,7 @@ export default class GuildMemberRemoveEvent extends BaseEvent {
 
         const logs = (await member.guild.fetchAuditLogs({
             limit: 1,
-            type: 'MEMBER_KICK',
+            type: AuditLogEvent.MemberKick,
         })).entries.first();
 
         if (logs && logs.target?.id === member.id) {

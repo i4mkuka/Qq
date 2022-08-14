@@ -1,4 +1,4 @@
-import { Permissions, BanOptions, CommandInteraction, GuildMember, Interaction, Message, User } from 'discord.js';
+import { Permissions, BanOptions, CommandInteraction, GuildMember, Interaction, Message, User, PermissionsBitField } from 'discord.js';
 import BaseCommand from '../../utils/structures/BaseCommand';
 import DiscordClient from '../../client/Client';
 import CommandOptions from '../../types/CommandOptions';
@@ -13,7 +13,7 @@ import { shouldNotModerate, hasPermission } from '../../utils/util';
 export default class BanCommand extends BaseCommand {
     supportsInteractions: boolean = true;
     supportsContextMenu: boolean = true;
-    permissions = [Permissions.FLAGS.BAN_MEMBERS];
+    permissions = [PermissionsBitField.Flags.BanMembers];
 
     constructor() {
         super('ban', 'moderation', ['Ban']);
@@ -43,7 +43,7 @@ export default class BanCommand extends BaseCommand {
             }
 
             if (options.options.getInteger('days')) {
-                banOptions.days = await <number> options.options.getInteger('days');
+                banOptions.deleteMessageDays = await <number> options.options.getInteger('days');
             }
         }
         else {
@@ -103,7 +103,7 @@ export default class BanCommand extends BaseCommand {
                     return;
                 }
 
-                banOptions.days = await parseInt(days);
+                banOptions.deleteMessageDays = await parseInt(days);
             }
         }
 
@@ -175,7 +175,7 @@ export default class BanCommand extends BaseCommand {
                     },
                     {
                         name: "Days of message deletion",
-                        value: banOptions.days === undefined ? "*No message will be deleted*" : (banOptions.days + '')
+                        value: banOptions.deleteMessageDays === undefined ? "*No message will be deleted*" : (banOptions.deleteMessageDays + '')
                     }
                 ])
             ]

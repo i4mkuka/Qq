@@ -1,4 +1,4 @@
-import { BanOptions, CommandInteraction, GuildMember, Interaction, Message, User, Permissions } from 'discord.js';
+import { BanOptions, CommandInteraction, GuildMember, Interaction, Message, User, Permissions, PermissionsBitField } from 'discord.js';
 import BaseCommand from '../../utils/structures/BaseCommand';
 import DiscordClient from '../../client/Client';
 import CommandOptions from '../../types/CommandOptions';
@@ -15,7 +15,7 @@ import { hasPermission, shouldNotModerate } from '../../utils/util';
 
 export default class TempBanCommand extends BaseCommand {
     supportsInteractions: boolean = true;
-    permissions = [Permissions.FLAGS.BAN_MEMBERS];
+    permissions = [PermissionsBitField.Flags.BanMembers];
 
     constructor() {
         super('tempban', 'moderation', []);
@@ -36,7 +36,7 @@ export default class TempBanCommand extends BaseCommand {
 
         let user: User;
         let banOptions: BanOptions = {
-            days: 7
+            deleteMessageDays: 7
         };
         let time;
 
@@ -49,7 +49,7 @@ export default class TempBanCommand extends BaseCommand {
             }
 
             if (options.options.getInteger('days')) {
-                banOptions.days = await <number> options.options.getInteger('days');
+                banOptions.deleteMessageDays = await <number> options.options.getInteger('days');
             }
         }
         else {
@@ -113,7 +113,7 @@ export default class TempBanCommand extends BaseCommand {
                     return;
                 }
 
-                banOptions.days = await parseInt(days);
+                banOptions.deleteMessageDays = await parseInt(days);
             }
         }
 
@@ -167,7 +167,7 @@ export default class TempBanCommand extends BaseCommand {
                 mod_tag: (msg.member!.user as User).tag,
                 reason: banOptions.reason ?? undefined,
                 meta: {
-                    days: banOptions.days,
+                    days: banOptions.deleteMessageDays,
                     time
                 }
             });

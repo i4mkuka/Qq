@@ -1,5 +1,5 @@
 import BaseEvent from '../../utils/structures/BaseEvent';
-import { FileOptions, Message } from 'discord.js';
+import { ChannelType, Message } from 'discord.js';
 import DiscordClient from '../../client/Client';
 import CommandOptions from '../../types/CommandOptions';
 import path from 'path';
@@ -11,7 +11,7 @@ export default class MessageDeleteEvent extends BaseEvent {
     }
 
     async run(client: DiscordClient, message: Message) {
-        if (message.author.bot || !message.guild || message.channel.type === 'DM' || (global as any).deletingMessages === true)
+        if (message.author.bot || !message.guild || message.channel.type === ChannelType.DM || (global as any).deletingMessages === true)
             return;
 
         await client.logger.logDelete(message);

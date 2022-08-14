@@ -5,14 +5,14 @@ function globalConfig() {
     return DiscordClient.client.config.props.global;
 }
 
-export async function fetchEmoji(name: string) {    
-    return await findEmoji(e => e.name === name);
+export function fetchEmoji(name: string) {    
+    return findEmoji(e => e.name === name);
 }
 
-export async function fetchEmojiStr(name: string) {    
-    return (await findEmoji(e => e.name === name))?.toString();
+export function fetchEmojiStr(name: string) {    
+    return (findEmoji(e => e.name === name))?.toString();
 }
 
-export async function findEmoji(callback: (e: Emoji) => boolean) {
-    return await DiscordClient.client.guilds.cache.find(g => g.id === globalConfig().id)!.emojis.cache.find(callback);
+export function findEmoji(callback: (e: Emoji) => boolean) {
+    return DiscordClient.client.guilds.cache.find(g => g.id === globalConfig().id)!.emojis.cache.find(callback);
 }

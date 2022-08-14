@@ -1,4 +1,4 @@
-import { BanOptions, CommandInteraction, EmojiIdentifierResolvable, GuildMember, Interaction, Message, Permissions, Role, TextChannel, User } from 'discord.js';
+import { BanOptions, ChannelType, CommandInteraction, EmojiIdentifierResolvable, GuildMember, Interaction, Message, Permissions, Role, TextChannel, User } from 'discord.js';
 import BaseCommand from '../../utils/structures/BaseCommand';
 import DiscordClient from '../../client/Client';
 import CommandOptions from '../../types/CommandOptions';
@@ -58,7 +58,7 @@ export default class UnlockCommand extends BaseCommand {
                 return;
             }
 
-            if (!channel || channel.type !== 'GUILD_TEXT') {
+            if (!channel || channel.type !== ChannelType.GuildText) {
                 await msg.reply({
                     embeds: [
                         new MessageEmbed()
@@ -100,7 +100,7 @@ export default class UnlockCommand extends BaseCommand {
 
                     try {
                         await channel.permissionOverwrites.edit(role, {
-                            SEND_MESSAGES: perm,
+                            SendMessages: perm,
                         });
                     }
                     catch (e) {

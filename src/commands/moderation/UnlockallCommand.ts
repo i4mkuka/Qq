@@ -1,4 +1,4 @@
-import { Collection, CommandInteraction, GuildBasedChannel, GuildChannel, Message, Permissions, Role, TextChannel } from 'discord.js';
+import { ChannelType, Collection, CommandInteraction, GuildBasedChannel, GuildChannel, Message, Permissions, Role, TextChannel } from 'discord.js';
 import BaseCommand from '../../utils/structures/BaseCommand';
 import CommandOptions from '../../types/CommandOptions';
 import InteractionOptions from '../../types/InteractionOptions';
@@ -41,7 +41,7 @@ export async function unlockAll(client: DiscordClient, role: Role, msg: Message 
 
 						try {
 							await channel.permissionOverwrites.edit(role, {
-								SEND_MESSAGES: perm,
+								SendMessages: perm,
 							});
 
 						}
@@ -136,11 +136,11 @@ export default class UnlockallCommand extends BaseCommand {
             (raid && (
 				(client.config.props[msg.guild!.id].raid.exclude && (client.config.props[msg.guild!.id].raid.channels.indexOf(c.id) === -1 && client.config.props[msg.guild!.id].raid.channels.indexOf(c.parent?.id) === -1)) || 
 				(!client.config.props[msg.guild!.id].raid.exclude && (client.config.props[msg.guild!.id].raid.channels.indexOf(c.id) !== -1 || client.config.props[msg.guild!.id].raid.channels.indexOf(c.parent?.id) !== -1))
-			))) && c.type === 'GUILD_TEXT'
+			))) && c.type === ChannelType.GuildText
         ) : null;
 
         if (channels === null && !raid) {
-            channels = msg.guild!.channels.cache.filter(c2 => (unlockall.includes(c2.id) || unlockall.includes(c2.parent?.id!)) && c2.type === 'GUILD_TEXT')!;
+            channels = msg.guild!.channels.cache.filter(c2 => (unlockall.includes(c2.id) || unlockall.includes(c2.parent?.id!)) && c2.type === ChannelType.GuildText)!;
 			channels = channels.merge(unlockallChannels, c => ({ keep: true, value: c }), c => ({ keep: true, value: c }), (c1, c2) => ({ keep: true, value: c2 }));
         }
 

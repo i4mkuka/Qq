@@ -2,7 +2,7 @@
 
 const { SlashCommandBuilder, ContextMenuCommandBuilder } = require('@discordjs/builders');
 const { REST } = require('@discordjs/rest');
-const { Routes } = require('discord-api-types/v9');
+const { Routes } = require('discord-api-types/v10');
 const { config } = require('dotenv');
 const { existsSync } = require('fs');
 const { Permissions, ApplicationCommand } = require('discord.js');
@@ -319,7 +319,7 @@ if (process.argv.includes('--clear')) {
 	contextMenuCommands = [];
 }
 
-const rest = new REST({ version: '9' }).setToken(TOKEN);
+const rest = new REST({ version: '10' }).setToken(TOKEN);
 
 rest.put(Routes[process.argv.includes('--guild') ? 'applicationGuildCommands' : 'applicationCommands'](CLIENT_ID, GUILD_ID), { body: commands })
 	.then(() => console.log('Successfully registered application ' + (process.argv.includes('--guild') ? 'guild ' : '') + 'commands.'))

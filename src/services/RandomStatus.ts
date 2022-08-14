@@ -1,19 +1,18 @@
-import { ExcludeEnum, PresenceStatusData } from "discord.js";
-import { ActivityTypes } from "discord.js/typings/enums";
+import { ActivityOptions, ActivityType, PresenceStatusData } from "discord.js";
 import DiscordClient from "../client/Client";
 import { random } from "../utils/util";
 
 export default class RandomStatus {
     constructor(protected client: DiscordClient) {
-        
+           
     }
 
-    async update(name?: string, type?: ExcludeEnum<typeof ActivityTypes, 'CUSTOM'>, status?: PresenceStatusData) {
+    async update(name?: string, type?: Exclude<ActivityType, ActivityType.Custom>, status?: PresenceStatusData) {
         status ??= random(['dnd', 'idle', 'online'] as PresenceStatusData[]);
         console.log(status);
         
         await this.client.user?.setActivity({
-            type: type ?? 'WATCHING',
+            type: type ?? ActivityType.Watching,
             name: name ?? 'over the server'
         });
 

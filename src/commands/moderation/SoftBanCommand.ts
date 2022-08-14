@@ -1,4 +1,4 @@
-import { BanOptions, CommandInteraction, GuildMember, Interaction, Message, User, Permissions } from 'discord.js';
+import { BanOptions, CommandInteraction, GuildMember, Interaction, Message, User, Permissions, PermissionsBitField } from 'discord.js';
 import BaseCommand from '../../utils/structures/BaseCommand';
 import DiscordClient from '../../client/Client';
 import CommandOptions from '../../types/CommandOptions';
@@ -13,7 +13,7 @@ import { hasPermission, shouldNotModerate } from '../../utils/util';
 
 export default class SoftBanCommand extends BaseCommand {
     supportsInteractions: boolean = true;
-    permissions = [Permissions.FLAGS.BAN_MEMBERS];
+    permissions = [PermissionsBitField.Flags.BanMembers];
 
     constructor() {
         super('softban', 'moderation', []);
@@ -34,7 +34,7 @@ export default class SoftBanCommand extends BaseCommand {
 
         let user: User;
         let banOptions: BanOptions = {
-            days: 7
+            deleteMessageDays: 7
         };
 
         if (options.isInteraction) {
@@ -45,7 +45,7 @@ export default class SoftBanCommand extends BaseCommand {
             }
 
             if (options.options.getInteger('days')) {
-                banOptions.days = await <number> options.options.getInteger('days');
+                banOptions.deleteMessageDays = await <number> options.options.getInteger('days');
             }
         }
         else {
@@ -105,11 +105,11 @@ export default class SoftBanCommand extends BaseCommand {
                     return;
                 }
 
-                banOptions.days = await parseInt(days);
+                banOptions.deleteMessageDays = await parseInt(days);
             }
         }
         
-        let reply = await msg.reply({
+        let reply: Message = (await msg.reply({
             embeds: [
                 new MessageEmbed({
                     author: {
@@ -117,10 +117,10 @@ export default class SoftBanCommand extends BaseCommand {
                         iconURL: user.displayAvatarURL()
                     },
                     description: `${await fetchEmojiStr('loading')} Softban is in progress...`,
-                    color: 'GOLD'
                 })
+                .setColor('Gold')
             ]
-        });
+        })) as Message;
         
         if (msg instanceof CommandInteraction)
             reply = <Message> await msg.fetchReply();
@@ -161,7 +161,7 @@ export default class SoftBanCommand extends BaseCommand {
                 mod_tag: (msg.member!.user as User).tag,
                 reason: banOptions.reason ?? undefined,
                 meta: {
-                    days: banOptions.days
+                    days: banOptions.deleteMessageDays
                 }
             });
 

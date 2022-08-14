@@ -1,5 +1,5 @@
 import BaseEvent from '../../utils/structures/BaseEvent';
-import { FileOptions, Message } from 'discord.js';
+import { ChannelType, Message } from 'discord.js';
 import DiscordClient from '../../client/Client';
 import CommandOptions from '../../types/CommandOptions';
 import path from 'path';
@@ -11,7 +11,7 @@ export default class MessageCreateEvent extends BaseEvent {
     }
 
     async run(client: DiscordClient, message: Message) {
-        if (message.author.bot || !message.guild || message.channel.type === 'DM') 
+        if (message.author.bot || !message.guild || message.channel.type === ChannelType.DM) 
             return;
 
         await client.setMessage(message);
@@ -67,7 +67,7 @@ export default class MessageCreateEvent extends BaseEvent {
                         return {
                             name,
                             attachment: path.resolve(__dirname, '../../../storage', name)
-                        } as FileOptions
+                        } 
                     }),
                 });
 

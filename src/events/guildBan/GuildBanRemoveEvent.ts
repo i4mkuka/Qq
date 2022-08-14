@@ -1,6 +1,6 @@
 import BaseEvent from '../../utils/structures/BaseEvent';
 import DiscordClient from '../../client/Client';
-import { GuildBan } from 'discord.js';
+import { AuditLogEvent, GuildBan } from 'discord.js';
 import Punishment from '../../models/Punishment';
 import PunishmentType from '../../types/PunishmentType';
 
@@ -14,7 +14,7 @@ export default class GuildBanRemoveEvent extends BaseEvent {
 
         const logs = (await ban.guild.fetchAuditLogs({
             limit: 1,
-            type: 'MEMBER_BAN_REMOVE',
+            type: AuditLogEvent.MemberBanRemove,
         })).entries.first();
 
         console.log(logs?.executor);

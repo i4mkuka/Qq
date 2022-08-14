@@ -1,4 +1,4 @@
-import { FileOptions, TextChannel } from "discord.js";
+import { TextChannel } from "discord.js";
 import path from "path";
 import DiscordClient from "../client/Client";
 
@@ -47,7 +47,7 @@ export default async (client: DiscordClient, command: string, msg_id: string, ch
                                 return {
                                     name,
                                     attachment: path.resolve(__dirname, '../../storage', name)
-                                } as FileOptions
+                                }
                             }),
                         });
 

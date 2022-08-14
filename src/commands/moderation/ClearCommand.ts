@@ -1,4 +1,4 @@
-import { BanOptions, CommandInteraction, Emoji, GuildChannel, GuildMember, Interaction, Message, TextChannel, User, Permissions } from 'discord.js';
+import { BanOptions, CommandInteraction, Emoji, GuildChannel, GuildMember, Interaction, Message, TextChannel, User, Permissions, PermissionsBitField, ChannelType } from 'discord.js';
 import BaseCommand from '../../utils/structures/BaseCommand';
 import DiscordClient from '../../client/Client';
 import CommandOptions from '../../types/CommandOptions';
@@ -12,7 +12,7 @@ import { hasPermission, shouldNotModerate } from '../../utils/util';
 
 export default class ClearCommand extends BaseCommand {
     supportsInteractions: boolean = true;
-    permissions = [Permissions.FLAGS.MANAGE_MESSAGES];
+    permissions = [PermissionsBitField.Flags.ManageMessages];
 
     constructor() {
         super('clear', 'moderation', []);
@@ -43,7 +43,7 @@ export default class ClearCommand extends BaseCommand {
             if (options.options.getChannel('channel')) {
                 channel = <GuildChannel> options.options.getChannel('channel');
 
-                if (channel.type !== 'GUILD_TEXT' && channel.type !== 'GUILD_NEWS' && channel.type !== 'GUILD_PUBLIC_THREAD' && channel.type !== 'GUILD_PRIVATE_THREAD') {
+                if (channel.type !== ChannelType.GuildText && channel.type !== ChannelType.GuildNews && channel.type !== ChannelType.GuildPublicThread && channel.type !== ChannelType.GuildPrivateThread) {
                     await msg.reply({
                         content: 'Invalid channel given.'
                     });
@@ -116,13 +116,13 @@ export default class ClearCommand extends BaseCommand {
         let count = 0;
         (global as any).deletingMessages = true;
 
-        let message = await msg.reply({
+        let message: Message = (await msg.reply({
             embeds: [
                 new MessageEmbed()
-                .setColor('GOLD')
-                .setDescription((await fetchEmoji('loading'))?.toString() + ' Deleting messages...')
+                .setColor('Gold')
+                .setDescription((fetchEmoji('loading'))?.toString() + ' Deleting messages...')
             ]
-        });
+        })) as Message;
 
         if (msg instanceof CommandInteraction)
             message = <Message> await msg.fetchReply();
@@ -214,7 +214,7 @@ export default class ClearCommand extends BaseCommand {
         const messageOptions = {
             embeds: [
                 new MessageEmbed()
-                .setColor('GREEN')
+                .setColor('Green')
                 .setDescription((await fetchEmoji('check') as Emoji).toString() + " Deleted " + count + " message(s)" + (user ? " from user " + user.tag : ''))
             ]
         };

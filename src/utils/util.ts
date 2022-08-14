@@ -1,7 +1,8 @@
 import fs from 'fs';
 import DiscordClient from '../client/Client';
-import { GuildMember, Message, CommandInteraction, MessageEmbed, ContextMenuInteraction, Interaction } from 'discord.js';
+import { GuildMember, Message, CommandInteraction, ContextMenuCommandInteraction, Interaction, BaseInteraction } from 'discord.js';
 import Axios, { AxiosRequestHeaders, HeadersDefaults } from 'axios';
+import MessageEmbed from '../client/MessageEmbed';
 
 export function shouldNotModerate(client: DiscordClient, member: GuildMember) {
 	if (!client.config.props[member.guild.id].admin) {
@@ -13,15 +14,15 @@ export function shouldNotModerate(client: DiscordClient, member: GuildMember) {
 	return member.roles.cache.has(role);
 }
 
-export async function hasPermission(client: DiscordClient, member: GuildMember, msg: Message | CommandInteraction | ContextMenuInteraction, mod: GuildMember | null, error: string = "You don't have permission to moderate this user") {
+export async function hasPermission(client: DiscordClient, member: GuildMember, msg: Message | CommandInteraction | ContextMenuCommandInteraction, mod: GuildMember | null, error: string = "You don't have permission to moderate this user") {
 	let m = mod;
 	
 	if (!m) {
 		m = msg.member! as GuildMember;
 	}
 	
-	if (member.roles.highest?.position >= m.roles.highest?.position) {
-        if (msg instanceof Interaction && msg.deferred) {
+	if (member.id !== m.id && member.roles.highest?.position >= m.roles.highest?.position) {
+        if (msg instanceof BaseInteraction && msg.deferred) {
             await msg.editReply({
                 embeds: [
                     new MessageEmbed()

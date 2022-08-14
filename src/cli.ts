@@ -2,7 +2,7 @@
 
 import { registerCLICommands, registerCommands, registerEvents } from './utils/registry';
 import DiscordClient from './client/Client';
-import { Intents } from 'discord.js';
+import { IntentsBitField, Partials } from 'discord.js';
 import { config } from 'dotenv';
 import { existsSync } from 'fs';
 import path from 'path';
@@ -27,17 +27,18 @@ if (process.argv.includes('--dev')) {
 }
 
 const client = new DiscordClient({
-    partials: ["CHANNEL"],
+    partials: [Partials.Channel],
     intents: [
-        Intents.FLAGS.GUILDS,
-        Intents.FLAGS.GUILD_MESSAGES,
-        Intents.FLAGS.DIRECT_MESSAGES, 
-        Intents.FLAGS.DIRECT_MESSAGE_TYPING,
-        Intents.FLAGS.GUILD_PRESENCES,
-        Intents.FLAGS.GUILD_MEMBERS,
-        Intents.FLAGS.GUILD_BANS,
-        Intents.FLAGS.GUILD_MESSAGE_REACTIONS,
-        Intents.FLAGS.GUILD_EMOJIS_AND_STICKERS,
+        IntentsBitField.Flags.Guilds,
+        IntentsBitField.Flags.GuildMessages,
+        IntentsBitField.Flags.DirectMessages,
+        IntentsBitField.Flags.DirectMessageTyping,
+        IntentsBitField.Flags.GuildPresences,
+        IntentsBitField.Flags.GuildMembers,
+        IntentsBitField.Flags.GuildBans,
+        IntentsBitField.Flags.MessageContent,
+        IntentsBitField.Flags.GuildMessageReactions,
+        IntentsBitField.Flags.GuildEmojisAndStickers,
     ]
 }, path.resolve(__dirname, '..'));
 

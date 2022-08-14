@@ -1,4 +1,4 @@
-import { MessageAttachment, MessageReaction, TextChannel, User } from "discord.js";
+import { Attachment, MessageReaction, TextChannel, User } from "discord.js";
 import DiscordClient from "../client/Client";
 import MessageEmbed from "../client/MessageEmbed";
 
@@ -40,7 +40,7 @@ export default class Starboard {
                             return {
                                 name: a.name,
                                 attachment: a.proxyURL
-                            } as MessageAttachment
+                            } as Attachment
                         })
                     });
     

@@ -1,18 +1,16 @@
 import BaseEvent from '../../utils/structures/BaseEvent';
-import { GuildMember, Interaction, Message, MessageEmbed } from 'discord.js';
+import { ChannelType, GuildMember, Interaction, Message, ModalMessageModalSubmitInteraction } from 'discord.js';
 import DiscordClient from '../../client/Client';
-import CommandOptions from '../../types/CommandOptions';
-import InteractionOptions from '../../types/InteractionOptions';
-import AutoCompleteOptions from '../../types/AutoCompleteOptions';
 import { ModalSubmitInteraction } from 'discord-modals';
 
+// FIXME: Fix event handling
 export default class ModalSubmitEvent extends BaseEvent {
     constructor() {
-        super('modalSubmit');
+        super('modalInteraction');
     }
 
-    async run(client: DiscordClient, interaction: ModalSubmitInteraction) {
-        if (!interaction.guild || !interaction.channel || interaction.channel.type === 'DM') {
+    async run(client: DiscordClient, interaction: ModalMessageModalSubmitInteraction) {
+        if (!interaction.guild || !interaction.channel || interaction.channel.type === ChannelType.DM) {
             if (interaction.isRepliable())
                 await interaction.reply({
                     content: 'You cannot use this bot on DMs.',

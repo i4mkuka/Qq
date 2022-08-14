@@ -4,6 +4,7 @@ import DiscordClient from '../../client/Client';
 import CommandOptions from '../../types/CommandOptions';
 import InteractionOptions from '../../types/InteractionOptions';
 import MessageEmbed from '../../client/MessageEmbed';
+import { fetchEmoji } from '../../utils/Emoji';
 
 export default class AboutCommand extends BaseCommand {
     supportsInteractions: boolean = true;
@@ -16,6 +17,18 @@ export default class AboutCommand extends BaseCommand {
     }
 
     async run(client: DiscordClient, message: Message | CommandInteraction, options: CommandOptions | InteractionOptions) {
+        
+        // console.log(fetchEmoji('loading')!.toString());
+
+        // await message.reply({
+        //     embeds: [
+        //         new MessageEmbed()
+        //         .setDescription(`${fetchEmoji('loading')!.toString()} test!`)
+        //     ]
+        // });
+        
+        // return;
+
         await message.reply({
             embeds: [
                 new MessageEmbed()

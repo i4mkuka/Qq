@@ -1,4 +1,4 @@
-import { ColorResolvable, CommandInteraction, GuildMember, Message, User } from 'discord.js';
+import { ActivityType, ColorResolvable, CommandInteraction, GuildMember, Message, User } from 'discord.js';
 import BaseCommand from '../../utils/structures/BaseCommand';
 import DiscordClient from '../../client/Client';
 import CommandOptions from '../../types/CommandOptions';
@@ -69,7 +69,7 @@ export default class ProfileCommand extends BaseCommand {
         };    
 
         const statusText = '' + ((user?.presence?.clientStatus?.desktop ? 'Desktop (' + status(user?.presence?.clientStatus?.desktop) + ')\n' : '') + (user?.presence?.clientStatus?.web ? 'Web (' + status(user?.presence?.clientStatus?.web) + ')\n' : '') + (user?.presence?.clientStatus?.mobile ? 'Mobile (' + status(user?.presence?.clientStatus?.mobile) + ')' : ''));
-        const state = user?.presence?.activities.find(a => a.type === 'CUSTOM')?.state;
+        const state = user?.presence?.activities.find(a => a.type === ActivityType.Custom)?.state;
 
         await msg.reply({
             embeds: [

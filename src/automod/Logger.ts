@@ -1,7 +1,8 @@
 import { roleMention } from '@discordjs/builders';
-import { BanOptions, CommandInteraction, FileOptions, Guild, GuildBan, GuildMember, Message, MessageEmbed, TextChannel, User } from 'discord.js';
+import { AuditLogEvent, BanOptions, CommandInteraction, Guild, GuildBan, GuildMember, Message, RawFile, TextChannel, User } from 'discord.js';
 import ms from 'ms';
 import DiscordClient from '../client/Client';
+import MessageEmbed from '../client/MessageEmbed';
 import Punishment from '../models/Punishment';
 import { timeProcess, timeSince } from '../utils/util';
 
@@ -72,7 +73,7 @@ class Logger {
                 })
                 .setTimestamp();
             
-            const files: FileOptions[] = [];
+            const files: ({ name: string, attachment: string })[] = [];
 
             if (msg.attachments.size > 0) {
                 let str = '';
@@ -103,7 +104,7 @@ class Logger {
 
             const auditLog = (await ban.guild.fetchAuditLogs({
                 limit: 1,
-                type: 'MEMBER_BAN_ADD',
+                type: AuditLogEvent.MemberBanAdd,
             })).entries.first();           
       
 
@@ -145,7 +146,7 @@ class Logger {
 
             const auditLog = (await guild.fetchAuditLogs({
                 limit: 1,
-                type: 'MEMBER_BAN_ADD',
+                type: AuditLogEvent.MemberBanAdd,
             })).entries.first();         
 
             if (banOptions.reason) {
@@ -189,7 +190,7 @@ class Logger {
 
             const auditLog = (await guild.fetchAuditLogs({
                 limit: 1,
-                type: 'MEMBER_BAN_ADD',
+                type: AuditLogEvent.MemberBanAdd,
             })).entries.first();         
 
             if (banOptions.reason) {
@@ -378,7 +379,7 @@ class Logger {
             await channel.send({
                 embeds: [
                     new MessageEmbed()
-                    .setColor('GOLD')
+                    .setColor('Gold')
                     .setTitle("Member warned")
                     .setAuthor({
                         name: (member as User).tag,
@@ -402,7 +403,7 @@ class Logger {
             await channel.send({
                 embeds: [
                     new MessageEmbed()
-                    .setColor('GOLD')
+                    .setColor('Gold')
                     .setTitle("Warning deleted")
                     .setAuthor({
                         name: member.user.tag,

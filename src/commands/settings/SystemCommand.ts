@@ -20,7 +20,7 @@ export default class SystemCommand extends BaseCommand {
             msg = await message.reply({
                 embeds: [
                     new MessageEmbed()
-                    .setColor('GOLD')
+                    .setColor('Gold')
                     .setDescription('Loading data...')
                 ]
             });
@@ -29,7 +29,7 @@ export default class SystemCommand extends BaseCommand {
             await message.reply({
                 embeds: [
                     new MessageEmbed()
-                    .setColor('GOLD')
+                    .setColor('Gold')
                     .setDescription('Loading data...')
                 ]
             });

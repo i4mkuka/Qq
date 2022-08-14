@@ -1,5 +1,5 @@
 import { channelMention } from "@discordjs/builders";
-import { Collection, Emoji, Guild, GuildMember, TextChannel } from "discord.js";
+import { ChannelType, Collection, Emoji, Guild, GuildMember, TextChannel } from "discord.js";
 import DiscordClient from "../client/Client";
 import MessageEmbed from "../client/MessageEmbed";
 import { fetchEmoji } from "../utils/Emoji";
@@ -19,7 +19,7 @@ export default class AutoClear {
 
                     if (channels) {
                         for await (const channel of channels) {
-                            if (channel && channel.type === 'GUILD_TEXT') {
+                            if (channel && channel.type === ChannelType.GuildText) {
                                 let fetched, count = 0;
         
                                 do {
@@ -33,7 +33,7 @@ export default class AutoClear {
                                 const messageOptions = {
                                     embeds: [
                                         new MessageEmbed()
-                                        .setColor('RED')
+                                        .setColor('Red')
                                         .setAuthor({
                                             name: member.user.tag,
                                             iconURL: member.displayAvatarURL()

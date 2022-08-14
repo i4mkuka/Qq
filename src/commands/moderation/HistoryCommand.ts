@@ -1,4 +1,4 @@
-import { BanOptions, CommandInteraction, ContextMenuInteraction, EmojiIdentifierResolvable, GuildMember, Interaction, InteractionCollector, Message, MessageActionRow, MessageButton, MessageOptions, ReplyOptions, TextChannel, User } from 'discord.js';
+import { BanOptions, CommandInteraction, ContextMenuCommandInteraction as ContextMenuInteraction, EmojiIdentifierResolvable, GuildMember, Interaction, InteractionCollector, Message, MessageActionRowComponentBuilder, ButtonBuilder, MessageOptions, ReplyOptions, TextChannel, User, ButtonStyle, ActionRowBuilder, ComponentType, InteractionType, BaseInteraction } from 'discord.js';
 import BaseCommand from '../../utils/structures/BaseCommand';
 import DiscordClient from '../../client/Client';
 import CommandOptions from '../../types/CommandOptions';
@@ -19,7 +19,7 @@ export default class HistoryCommand extends BaseCommand {
         super('history', 'moderation', ['Moderation History']);
     }
 
-    async genEmbed(client: DiscordClient, msg: Message | Interaction, user: User, page: number = 1) {
+    async genEmbed(client: DiscordClient, msg: Message | BaseInteraction, user: User, page: number = 1) {
         const limit = 3;
         const offset = ((page < 1 ? 1 : page) - 1) * limit;
 
@@ -129,16 +129,16 @@ export default class HistoryCommand extends BaseCommand {
     createActionRow(page: number, max: number) {
         console.log(max);
         
-        const back = new MessageButton({
+        const back = new ButtonBuilder({
             customId: 'history-back-',
             label: '<<',
-            style: 'PRIMARY'
+            style: ButtonStyle.Primary
         });
 
-        const next = new MessageButton({
+        const next = new ButtonBuilder({
             customId: 'history-next-',
             label: '>>',
-            style: 'PRIMARY'
+            style: ButtonStyle.Primary
         });
 
         let nextPage = page + 1;
@@ -166,7 +166,7 @@ export default class HistoryCommand extends BaseCommand {
         next.setCustomId('history-next-' + nextPage);
         back.setCustomId('history-back-' + prevPage);
 
-        return new MessageActionRow()
+        return new ActionRowBuilder<ButtonBuilder>()
             .addComponents(
                 back,
                 next
@@ -245,8 +245,8 @@ export default class HistoryCommand extends BaseCommand {
             guild: msg.guild!,
             channel: msg.channel!,
             max: 20,
-            componentType: 'BUTTON',
-            interactionType: 'MESSAGE_COMPONENT',
+            componentType: ComponentType.Button,
+            interactionType: InteractionType.MessageComponent,
             message,
             time: 30000,
             filter(i) {
